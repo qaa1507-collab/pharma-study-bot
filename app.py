@@ -53,7 +53,7 @@ if uploaded_file and api_key:
     with open("temp.pdf", "wb") as f:
         f.write(uploaded_file.getvalue())
     
-    loader = PyPDF2Loader("temp.pdf")
+    loader = PyPDFLoader("temp.pdf")
     docs = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
     splits = text_splitter.split_documents(docs)
