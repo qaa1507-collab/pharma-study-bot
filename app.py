@@ -31,7 +31,6 @@ st.title("💊 SN 약리학: 생리 논리 & 오답 노트")
 
 with st.sidebar:
     st.header("⚙️ 설정")
-    # Streamlit Secrets나 직접 입력에서 API 키 가져오기
     api_key = st.text_input("OpenAI API Key", type="password")
     uploaded_file = st.file_uploader("전공서적 PDF 업로드", type="pdf")
     st.divider()
@@ -51,11 +50,9 @@ PROMPT = PromptTemplate(template=custom_prompt_template, input_variables=["conte
 
 # --- 4. RAG 및 기능 구현 ---
 if uploaded_file and api_key:
-    # PDF 임시 저장
     with open("temp.pdf", "wb") as f:
         f.write(uploaded_file.getvalue())
     
-    # RAG 로직
     loader = PyPDF2Loader("temp.pdf")
     docs = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
@@ -104,7 +101,7 @@ elif mode == "오답 노트 확인":
     for row in rows:
         with st.expander(f"[{row[5]}] 복습 문항"):
             st.write(row[2])
-            if st.button(f"삭제 {row[0]}"):
+            if st.button(f"삭제 {row[0]}", key=f"del_{row[0]}"):
                 c.execute("DELETE FROM review_notes WHERE id=?", (row[0],))
                 conn.commit()
                 st.rerun()
